@@ -1,0 +1,50 @@
+name: Build & Push to c8n.io
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v1
+
+      - name: Login to c8n Registry
+        uses: docker/login-action@v1
+        with:
+          registry: c8n.io
+          username: ${{ secrets.C8N_USERNAME }}
+          password: ${{ secrets.C8N_SECRET}}
+
+      #    - name: Build latest
+      #      run: docker build -f DockerfileEmbeddedChrome -t c8n.io/perosa/perosa:latest .
+      #
+      #    - name: Push to c8n Registry
+      #      run: docker push c8n.io/perosa/tweesky:latest
+
+      - name: Build latest
+        run: docker build -t c8n.io/perosa/perosa:latest .
+
+      - name: Image inspect
+        id: insp1
+        run: |
+          echo ::set-output name=insp::$(skopeo inspect containers-storage:c8n.io/perosa/tweesky:latest --format "{{ .Digest }}")
+
+      - name: Check package version
+        id: chk1
+        run: |
+          echo ::set-output name=myvar::$(skopeo inspect docker://c8n.io/perosa/tweesky:latest --format "{{ .Digest }}")
+      #      run:
+      #        #docker inspect --format='{{index .RepoDigests 0}}' c8n.io/perosa/tweesky:latest
+      #        echo "::set-output name=digest::$(skopeo inspect docker://c8n.io/perosa/tweesky:latest --format='{{index .RepoDigests 0}}')"
+      - name: Print insp version
+        id: pr1
+        run: |
+          echo ${{ steps.insp1.outputs.insp }}
+
+      - name: Print package version
+        id: pr2
+        run: |
+          echo ${{ steps.chk1.outputs.myvar }}
+
