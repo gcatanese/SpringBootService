@@ -2,10 +2,7 @@ package com.perosa.controller;
 
 import com.perosa.util.WebHelper;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.logging.Logger;
@@ -44,6 +41,24 @@ public class ServiceOne {
 
         return "get";
 
+    }
+
+    @RequestMapping(value =  "/svc2/{param}", method = GET)
+    public String svc(@PathVariable String param) {
+
+        (new Thread() {
+            public void run() {
+                doWork(param);
+            }
+        }).start();
+
+
+        return "In Progress";
+    }
+
+    private boolean doWork(String val) {
+        LOGGER.info("doWork with " + val);
+        return true;
     }
 
 }
