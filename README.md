@@ -7,6 +7,8 @@ the image is built and deployed.
 
 The Heroku API Key is required (configured as GitHub Actions secret).
 
+See also [Deploy to Heroku From a MacBook M1: Heroku CLI or GitHubActions](https://medium.com/geekculture/deploy-to-heroku-from-a-macbook-m1-heroku-cli-or-githubactions-868bc3a50935) on Medium 
+
 
 ## Setup
 
